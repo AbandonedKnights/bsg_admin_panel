@@ -22,6 +22,7 @@ import ROIWidthdrawlHistory from "./ROIWidthdrawlHistory";
 import LevelWidthdrawlHistory from "./LevelWidthdrawlHistory";
 import RefWidthdrawlHistory from "./ReferralWidthdrawlHistory";
 import Support from "./Support";
+import ActivevateUser from "./ActivevateUser";
 
 export default function Dashboard() {
   const { page, memberID } = useParams();
@@ -29,6 +30,7 @@ export default function Dashboard() {
     settings: <Settings />,
     associates: <Associates />,
     investments: <Investments />,
+    activateUser: <ActivevateUser />,
     fund_request: <FundRequest />,
     income_history: <IncomeHistory />,
     roi_income_history: <ROIIncomeHistory />,

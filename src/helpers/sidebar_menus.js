@@ -1,6 +1,7 @@
 const sidebarMenus = [
   { title: "Dashboard", icon: "fas fa-chart-pie", page: "/dashboard" },
-  { title: "Associates", icon: "fas fa-hand-holding-usd", page: "/dashboard/associates" },
+  // { title: "Associates", icon: "fas fa-hand-holding-usd", page: "/dashboard/associates" },
+  { title: "Activevate User", icon: "fas fa-hand-holding-usd", page: "/dashboard/activateUser" },
   //{title: "Credit Wallets", icon:"fas fa-hand-holding-usd", page:"credit_wallets"},
   //{title: "Update Rank", icon:"fas fa-hand-holding-usd", page:"update_rank"},
   {

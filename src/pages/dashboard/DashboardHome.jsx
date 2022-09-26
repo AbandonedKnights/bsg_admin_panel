@@ -23,12 +23,8 @@ import { Chip, Stack } from "@mui/material";
 
 export default function DashboardHome() {
   const { isLoggedIn, userInfo } = useSelector((state) => state?.user?.value);
-  const [ownerWalletAddress, setOwnerWalletAddress] = useState(
-    userInfo?.admin?.owner_wallet_address
-  );
   const [userData, setUserData] = useState({});
   const [dashboardData, setDashboardData] = useState({});
-  const [poolUsers, setPoolUsers] = useState([]);
   const [showEditWalletAddress, setShowEditWalletAddress] = useState(false);
   const dispatch = useDispatch();
 
@@ -160,11 +156,10 @@ export default function DashboardHome() {
 
   async function getDashboardData() {
     api
-      .post("getDashboardData")
+      .post("getDashboardData", {admin_user_id:userInfo?.params?.user_id})
       .then((res) => {
-        console.log("dashboardData :: ", res.data);
-        setDashboardData({ ...res.data });
-        setPoolUsers([...res.data.eligibleUserForPoolIncome]);
+        console.log("dashboardData :: ", res.data.data);
+        setDashboardData({ ...res.data.data });
       })
       .catch((error) => {
         toast.error(
@@ -175,22 +170,22 @@ export default function DashboardHome() {
       });
   }
 
-  async function startClosing() {
-    api
-      .post("startClosing")
-      .then((res) => {
-        console.log("dashboardData :: ", res.data);
-        toast.success("Closing done  successfully.");
-        //setDashboardData({ ...res.data });
-      })
-      .catch((error) => {
-        toast.error(
-          error.response.data.message ??
-            error.message ??
-            "OOPs, Something went wrong."
-        );
-      });
-  }
+  // async function startClosing() {
+  //   api
+  //     .post("startClosing")
+  //     .then((res) => {
+  //       console.log("dashboardData :: ", res.data);
+  //       toast.success("Closing done  successfully.");
+  //       //setDashboardData({ ...res.data });
+  //     })
+  //     .catch((error) => {
+  //       toast.error(
+  //         error.response.data.message ??
+  //           error.message ??
+  //           "OOPs, Something went wrong."
+  //       );
+  //     });
+  // }
 
   // async function getroidistribution() {
   //   api
@@ -207,43 +202,43 @@ export default function DashboardHome() {
   //     });
   // }
 
-  async function updateOnwerWallet(e) {
-    e.preventDefault();
-    const formData = getFormData(e.target);
-    const updatePromise = api.post("update_owner_address", formData);
-    toast
-      .promise(updatePromise, {
-        loading: "Updatng onwers's wallet address",
-        success: (data) => {
-          e.target.reset();
-          setOwnerWalletAddress(formData.owner_wallet_address);
-          setShowEditWalletAddress(false);
-          return "Success, wallet address updated successfully.";
-        },
-        error: "Error, Something went worng",
-      })
-      .then(() => {
-        getDashboardData();
-      });
-  }
+  // async function updateOnwerWallet(e) {
+  //   e.preventDefault();
+  //   const formData = getFormData(e.target);
+  //   const updatePromise = api.post("update_owner_address", formData);
+  //   toast
+  //     .promise(updatePromise, {
+  //       loading: "Updatng onwers's wallet address",
+  //       success: (data) => {
+  //         e.target.reset();
+  //         setOwnerWalletAddress(formData.owner_wallet_address);
+  //         setShowEditWalletAddress(false);
+  //         return "Success, wallet address updated successfully.";
+  //       },
+  //       error: "Error, Something went worng",
+  //     })
+  //     .then(() => {
+  //       getDashboardData();
+  //     });
+  // }
 
-  async function updateTopupAmount(e) {
-    e.preventDefault();
-    const formData = getFormData(e.target);
-    const updatePromise = api.post("change_min_max_topup_amount", formData);
-    toast
-      .promise(updatePromise, {
-        loading: "Updating topup amounts...",
-        success: (data) => {
-          e.target.reset();
-          return "Success, topup amount updated successfully.";
-        },
-        error: "Error, Something went worng",
-      })
-      .then(() => {
-        getDashboardData();
-      });
-  }
+  // async function updateTopupAmount(e) {
+  //   e.preventDefault();
+  //   const formData = getFormData(e.target);
+  //   const updatePromise = api.post("change_min_max_topup_amount", formData);
+  //   toast
+  //     .promise(updatePromise, {
+  //       loading: "Updating topup amounts...",
+  //       success: (data) => {
+  //         e.target.reset();
+  //         return "Success, topup amount updated successfully.";
+  //       },
+  //       error: "Error, Something went worng",
+  //     })
+  //     .then(() => {
+  //       getDashboardData();
+  //     });
+  // }
   // useEffect(() => {
   //   getroidistribution();
   // }, []);
@@ -256,7 +251,7 @@ export default function DashboardHome() {
     <>
       {/* <NewTaskExport /> */}
       <div className="container-fluid py-4">
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <span className="fw-bold">Owner Wallet Address:</span>{" "}
           {ownerWalletAddress && ownerWalletAddress.length > 0
             ? ownerWalletAddress
@@ -325,7 +320,7 @@ export default function DashboardHome() {
               Start Closing
             </button>
           </div>
-        </div>
+        </div> */}
 
         <div className="row">
           <div className="col-lg-12 col-md-12 ">
@@ -343,13 +338,13 @@ export default function DashboardHome() {
                 </div>
               </div>
 
-              <div className="col mb-2">
+              <div className="col  mb-2">
                 <div className="card card-body border-0 shadow-sm h-100">
-                  <h6 className="fw-bold my-0">Total Withdrawal</h6>
+                  <h6 className="fw-bold my-0 ">Total Investment</h6>
                   <div className="d-flex">
                     <div>
                       <span className="fs-4">
-                        {dashboardData.totalWithdrawl ?? 0}
+                        {dashboardData.totalInvestment ?? 0}
                       </span>{" "}
                       <i className="fas fa-dollar-sign"></i>
                     </div>
@@ -359,11 +354,11 @@ export default function DashboardHome() {
 
               <div className="col mb-2">
                 <div className="card card-body border-0 shadow-sm h-100">
-                  <h6 className="fw-bold my-0 ">Total Business</h6>
+                  <h6 className="fw-bold my-0">Total Helping Hand</h6>
                   <div className="d-flex">
                     <div>
                       <span className="fs-4">
-                        {dashboardData?.totalInvestment ?? 0}
+                        {dashboardData.helping_hand ?? 0}
                       </span>{" "}
                       <i className="fas fa-dollar-sign"></i>
                     </div>
@@ -373,29 +368,26 @@ export default function DashboardHome() {
 
               <div className="col mb-2">
                 <div className="card card-body border-0 shadow-sm h-100">
-                  <h6 className="fw-bold my-0">Total Distribution</h6>
+                  <h6 className="fw-bold my-0 ">Total babydoge Distribution</h6>
                   <div className="d-flex">
                     <div>
                       <span className="fs-4">
-                        {dashboardData?.totalWidthdrawl?.[0]?.totalWidthdrawl ??
+                        {dashboardData?.total_babydoge ?? 0}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col mb-2">
+                <div className="card card-body border-0 shadow-sm h-100">
+                  <h6 className="fw-bold my-0">Total Shiba Distribution</h6>
+                  <div className="d-flex">
+                    <div>
+                      <span className="fs-4">
+                        {dashboardData?.total_shiba ??
                           0}
-                      </span>{" "}
-                      <i className="fas fa-dollar-sign"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col mb-2">
-                <div className="card card-body border-0 shadow-sm h-100">
-                  <h6 className="fw-bold my-0">Total Pool Income</h6>
-                  <div className="d-flex">
-                    <div>
-                      <span className="fs-4">
-                        {Number(dashboardData?.totalPoolBalance).toFixed(2) ??
-                          0}
-                      </span>{" "}
-                      <i className="fas fa-dollar-sign"></i>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -404,7 +396,7 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        <div className="my-2">
+        {/* <div className="my-2">
           <h3>Eligible member for Pool Income </h3>
           <div className="my-2">
             <div className="d-flex justify-content-end">
@@ -432,7 +424,7 @@ export default function DashboardHome() {
           <DataGrid
             //loading={loadingData}
             getRowId={(r) => r._id}
-            rows={poolUsers}
+            rows={userData}
             columns={columns}
             //rowCount={totalUsers}
             pageSize={10}
@@ -445,7 +437,7 @@ export default function DashboardHome() {
             className="bg-white"
             density="compact"
           />
-        </div>
+        </div> */}
       </div>
     </>
   );
